@@ -1,0 +1,2 @@
+[samba-adc]
+localhost ansible_connection=local

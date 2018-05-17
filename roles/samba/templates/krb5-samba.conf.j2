@@ -1,0 +1,14 @@
+[libdefaults]
+        default_realm = {{ realm }}
+        dns_lookup_realm = false
+        dns_lookup_kdc = true
+
+[realms]
+{{ realm }} = {
+  kdc = ds.{{ realm | lower }}
+  admin_server = ds.{{ realm | lower }}
+}
+
+[domain_realm]
+  .{{ realm | lower }} = {{ realm }}
+  {{ realm | lower }} = {{ realm }}

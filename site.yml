@@ -1,0 +1,4 @@
+- hosts: samba-adc
+#  connection: local
+  roles:
+  - samba

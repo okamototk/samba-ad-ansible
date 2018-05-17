@@ -1,0 +1,64 @@
+- name: Add Samba-AD yum repository
+  yum_repository:
+    name: Samba
+    description: tranquil Samba repository
+    file: SambaTranquil
+    baseurl: https://samba.tranquil.it/centos7/stable/
+    gpgcheck: no
+
+- name: EPEL install
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Samba install
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - authconfig
+  - krb5-workstation
+  - samba-dc
+  - samba-client
+  - samba-winbind
+  - samba-winbind-clients
+
+- name: Check DC is already configured
+  command: grep "server role = active directory domain controller"  /etc/samba/smb.conf
+  register: check_result
+  ignore_errors: True
+
+- block: 
+  - name: Remove default configuration
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+    - /etc/krb/krb.conf
+    - /etc/samba/smb.conf
+
+  - name: Create AD Domain Configuration
+    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }}
+  when: check_result.rc == 1
+
+- name: Create realm hostname as lower case
+  set_fact: realm_hostname="{{ realm | lower }}"
+
+- name: Create krb5.conf
+  template:
+   src: krb5-samba.conf.j2
+   dest: /etc/krb5.conf.d/krb5-samba.conf
+
+- name: Configure DNS
+  replace:
+    dest=/etc/resolv.conf
+    regexp="^nameserver [0-9.]+"
+    replace="nameserver 127.0.0.1"
+
+- name: Start samba service
+  systemd:
+    name: samba
+    state: restarted
+    enabled: yes
+
+    
