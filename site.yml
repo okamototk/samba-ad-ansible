@@ -1,4 +1,4 @@
-- hosts: samba-adc
+- hosts: samba-pdc
 #  connection: local
   roles:
   - samba
