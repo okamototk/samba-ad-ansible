@@ -58,6 +58,40 @@
     regexp="^nameserver [0-9.]+"
     replace="nameserver 127.0.0.1"
 
+- name: Open Firewall
+  firewalld:
+    service: "{{ item }}"
+    zone: public
+    permanent: true
+    state: enabled
+    immediate: yes
+  with_items:
+  - dns #53
+  - kerberos # 88
+  - ldap # 389
+  - kpasswd # 464
+  - ldaps  # 636
+  # Following port may be used. 
+  # But currently it is not used and disabled.
+  #  - netbios-ns # 137
+  #  - netbios-dgm # 138
+  #  - mdns # 5353
+  #  - adws # 9389
+
+- name: Open Firewall
+  firewalld:
+    port: "{{ item }}"
+    zone: public
+    permanent: true
+    state: enabled
+    immediate: yes
+  with_items:
+  - 135/tcp # epmap
+  - 139/tcp # netbios-ssn
+  - 445/tcp # microsoft-ds
+  - 3268/tcp # msft-gc
+  - 3269/tcp # msft-gc-ssl
+
 - name: Start samba service
   systemd:
     name: samba
