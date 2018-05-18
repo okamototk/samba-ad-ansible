@@ -38,9 +38,9 @@
     - /etc/krb/krb.conf
     - /etc/samba/smb.conf
     ignore_errors: True
-
+ 
   - name: Create AD Domain Configuration
-    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }} --host-name={{ ansible_hostname }}
+    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }} --host-name={{ ansible_hostname }} --host-ip={{ host_ip }}
 
   when: check_result.rc != 0
 
