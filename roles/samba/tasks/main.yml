@@ -88,6 +88,7 @@
   with_items:
   - 135/tcp # epmap
   - 139/tcp # netbios-ssn
+  - 389/udp # ldap/udp
   - 445/tcp # microsoft-ds
   - 3268/tcp # msft-gc
   - 3269/tcp # msft-gc-ssl
