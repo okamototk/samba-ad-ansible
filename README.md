@@ -24,7 +24,7 @@ Administrator password is written in group_vars/samba-pdc.yml
     # cp /var/lib/samba/private/tls/ca.pem /etc/pki/ca-trust/source/anchors/
     # update-ca-trust
     # yum install -y openldap-clients
-    # ldapsearch -ZZ -x -D "cn=administrator,cn=users,dc=mydomain,dc=com" -w sysadmin0! -h myhost.mydomain.com -b "cn=users,dc=mydomain,dc=com" "(objectclass=*)" "sAMAccountName=username"
+    # ldapsearch -ZZ -x -D "cn=administrator,cn=users,dc=mydomain,dc=com" -w sysadmin0! -h pdc.mydomain.com -b "cn=users,dc=mydomain,dc=com" "(objectclass=*)" "sAMAccountName=username"
 
 ## Client Setting
 
@@ -41,7 +41,14 @@ Configure DNS for Samba PDC.
     # samba-tool group add mygroup
     # samba-tool group addmembers mygroup okamototk
 
-# samba-tool group addmembers mygroup okamototk
+## Add client to domain
+
+    # net ads join -S pdc.mydomain.com -U administrator
+    Enter administrator's password:
+    Using short domain name -- MYDOMAIN
+    Joined 'CLIENT' to dns domain 'mydomain.com'
+
+
 
 ## Trouble Shooting
 
@@ -52,3 +59,15 @@ Check dns forwarder configuration in /etc/samba/smb.conf
     [global]
             dns forwarder = 8.8.8.8
 
+### Fail DNS update on client
+
+    # net ads join -v -U administrator
+    Enter administrator's password:
+    Using short domain name -- MYDOMAIN
+    Joined 'MYCLIENT' to dns domain 'mydomain.com'
+    No DNS domain configured for myclient. Unable to perform DNS Update.
+    DNS update failed: NT_STATUS_INVALID_PARAMETER
+
+Please check client configuration. Check following site:
+
+* https://lists.samba.org/archive/samba/2014-June/182437.html

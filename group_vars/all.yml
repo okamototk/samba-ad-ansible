@@ -1,5 +1,5 @@
-realm: DOMAIN.COM
-domain: DOMAIN
+realm: MYDOMAIN.COM
+domain: MYDOMAIN
 pdc_ip: 192.168.31.113
 
 

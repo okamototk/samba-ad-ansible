@@ -1,5 +1,5 @@
 [samba-pdc]
-localhost ansible_connection=local
+pdc
 
 [ad-client]
-localhost ansible_connection=local
+client
