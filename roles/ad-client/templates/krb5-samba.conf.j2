@@ -5,8 +5,8 @@
 
 [realms]
 {{ realm }} = {
-  kdc = {{ groups['samba-pdc'][0] }}.{{ realm | lower }}
-  admin_server = {{ groups['samba-pdc'][0] }}.{{ realm | lower }}
+  kdc = {{ groups['samba-ad'][0] }}.{{ realm | lower }}
+  admin_server = {{ groups['samba-ad'][0] }}.{{ realm | lower }}
 }
 
 [domain_realm]

@@ -36,7 +36,7 @@
   replace:
     dest=/etc/resolv.conf
     regexp="^nameserver [0-9.]+"
-    replace="nameserver {{ pdc_ip }}"
+    replace="nameserver {{ dc_ip }}"
 
 - name: Configure nsswitch passwd
   replace:
@@ -65,8 +65,8 @@
 
 - name: Copy TLS certificate
   copy:
-    src: /etc/pki/ca-trust/source/anchors/pdc-ca.pem 
-    dest: /etc/pki/ca-trust/source/anchors/pdc-ca.pem 
+    src: /etc/pki/ca-trust/source/anchors/dc-ca.pem 
+    dest: /etc/pki/ca-trust/source/anchors/dc-ca.pem 
 
 - name: Update Certificate Database
   command: update-ca-trust

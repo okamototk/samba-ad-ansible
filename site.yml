@@ -1,7 +1,11 @@
-- hosts: samba-pdc
+- hosts: samba-ad
 #  connection: local
   roles:
-  - samba-pdc
+  - os
+  - samba-ad
+  - samba-ad/firewalld
+
 - hosts: ad-client
   roles:
+  - os
   - ad-client

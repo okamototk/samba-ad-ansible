@@ -42,7 +42,7 @@
     ignore_errors: True
  
   - name: Create AD Domain Configuration
-    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }} --host-name={{ ansible_hostname }} --host-ip={{ pdc_ip }}
+    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }} --host-name={{ ansible_hostname }} --host-ip={{ dc_ip }}
 
   when: check_result.rc != 0
 
@@ -60,54 +60,22 @@
     regexp="^nameserver [0-9.]+"
     replace="nameserver 127.0.0.1"
 
-- name: Open Firewall
-  firewalld:
-    service: "{{ item }}"
-    zone: public
-    permanent: true
-    state: enabled
-    immediate: yes
-  with_items:
-  - dns #53
-  - kerberos # 88
-  - ldap # 389
-  - kpasswd # 464
-  - ldaps  # 636
-  # Following port may be used. 
-  # But currently it is not used and disabled.
-  #  - netbios-ns # 137
-  #  - netbios-dgm # 138
-  #  - mdns # 5353
-  #  - adws # 9389
-
-- name: Open Firewall
-  firewalld:
-    port: "{{ item }}"
-    zone: public
-    permanent: true
-    state: enabled
-    immediate: yes
-  with_items:
-  - 135/tcp # epmap
-  - 137/udp # netbios-ng
-  - 138/udp # netbios-dgm
-  - 139/tcp # netbios-ssn
-  - 389/udp # ldap/udp
-  - 445/tcp # microsoft-ds
-  - 3268/tcp # msft-gc
-  - 3269/tcp # msft-gc-ssl
-  - 49152-65535/tcp # Dynamic RPC Ports
-
 - name: Start samba service
   systemd:
     name: samba
     state: restarted
     enabled: yes
 
+- name: Wait creating certificate
+  wait_for:
+    path: /var/lib/samba/private/tls/ca.pem
+    state: present
+    timeout: 300
+
 - name: Fetch cert file for tls
   fetch:
     src: /var/lib/samba/private/tls/ca.pem
-    dest: /etc/pki/ca-trust/source/anchors/pdc-ca.pem
+    dest: /etc/pki/ca-trust/source/anchors/dc-ca.pem
     flat: yes
 
   

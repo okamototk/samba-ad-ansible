@@ -1,0 +1,35 @@
+- name: Open Firewall - service name
+  firewalld:
+    service: "{{ item }}"
+    zone: public
+    permanent: true
+    state: enabled
+    immediate: yes
+  with_items:
+  - dns #53
+  - kerberos # 88
+  - ldap # 389
+  - kpasswd # 464
+  - ldaps  # 636
+  # Following port may be used.
+  # But currently it is not used and disabled.
+  #  - mdns # 5353
+  #  - adws # 9389
+
+- name: Open Firewall - port
+  firewalld:
+    port: "{{ item }}"
+    zone: public
+    permanent: true
+    state: enabled
+    immediate: yes
+  with_items:
+  - 135/tcp # epmap
+  - 137/udp # netbios-ng
+  - 138/udp # netbios-dgm
+  - 139/tcp # netbios-ssn
+  - 389/udp # ldap/udp
+  - 445/tcp # microsoft-ds
+  - 3268/tcp # msft-gc
+  - 3269/tcp # msft-gc-ssl
+  - 49152-65535/tcp # Dynamic RPC Ports

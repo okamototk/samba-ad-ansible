@@ -1,5 +1,5 @@
-[samba-pdc]
-pdc
+[samba-ad]
+dc
 
 [ad-client]
 client
