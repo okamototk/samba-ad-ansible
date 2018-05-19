@@ -38,6 +38,7 @@
     - /etc/krb/krb.conf
     - /etc/krb5.conf
     - /etc/samba/smb.conf
+    - /var/lib/samba/private/tls
     ignore_errors: True
  
   - name: Create AD Domain Configuration
