@@ -5,8 +5,8 @@
 
 [realms]
 {{ realm }} = {
-  kdc = ds.{{ realm | lower }}
-  admin_server = ds.{{ realm | lower }}
+  kdc = {{ ansible_hostname }}.{{ realm | lower }}
+  admin_server = {{ ansible_hostname }}.{{ realm | lower }}
 }
 
 [domain_realm]

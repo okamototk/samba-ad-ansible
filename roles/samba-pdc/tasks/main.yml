@@ -36,11 +36,12 @@
       state: absent
     with_items:
     - /etc/krb/krb.conf
+    - /etc/krb5.conf
     - /etc/samba/smb.conf
     ignore_errors: True
  
   - name: Create AD Domain Configuration
-    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }} --host-name={{ ansible_hostname }} --host-ip={{ host_ip }}
+    command: samba-tool domain provision --use-rfc2307 --realm {{ realm }} --domain {{ domain }} --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass={{ adminpass }} --host-name={{ ansible_hostname }} --host-ip={{ pdc_ip }}
 
   when: check_result.rc != 0
 
