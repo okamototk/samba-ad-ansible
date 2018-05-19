@@ -43,10 +43,18 @@ Configure DNS for Samba AD.
 
 ## Add client to domain
 
+Execure on client:
+
     # net ads join -S dc.mydomain.com -U administrator
     Enter administrator's password:
     Using short domain name -- MYDOMAIN
     Joined 'CLIENT' to dns domain 'mydomain.com'
+
+## Add DNS record
+
+    # samba-tool dns add dc.mydomain.com  -U administrator mydomain.com newhw A 192.168.0.99
+    Password for [MYDOMAIN\administrator]:
+    Record added successfully
 
 
 
