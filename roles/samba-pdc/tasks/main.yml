@@ -89,11 +89,14 @@
     immediate: yes
   with_items:
   - 135/tcp # epmap
+  - 137/udp # netbios-ng
+  - 138/udp # netbios-dgm
   - 139/tcp # netbios-ssn
   - 389/udp # ldap/udp
   - 445/tcp # microsoft-ds
   - 3268/tcp # msft-gc
   - 3269/tcp # msft-gc-ssl
+  - 49152-65535/tcp # Dynamic RPC Ports
 
 - name: Start samba service
   systemd:
