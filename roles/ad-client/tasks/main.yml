@@ -63,6 +63,14 @@
     line: "{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"
 #  when: test_grep.stdout != ""
 
+- name: Copy TLS certificate
+  copy:
+    src: /etc/pki/ca-trust/source/anchors/pdc-ca.pem 
+    dest: /etc/pki/ca-trust/source/anchors/pdc-ca.pem 
+
+- name: Update Certificate Database
+  command: update-ca-trust
+
 - name: Start samba service
   systemd:
     name: smb
