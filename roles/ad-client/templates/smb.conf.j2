@@ -1,0 +1,32 @@
+[global]
+        workgroup = {{ domain }}
+        security = ads
+        realm = {{ realm }}
+        netbios name = {{ ansible_hostname | upper }}
+
+        winbind use default domain = true
+        winbind offline logon = yes
+        winbind cache time = 300
+
+        # Mapping between UID and GID
+        idmap config {{ domain }}:backend = rid
+        idmap config {{ domain }}:range = 10000-15000
+        idmap uid = 10000-15000
+        idmap gid = 10000-15000
+
+        # Create home directory for AD users
+        template homedir = /home/%U
+        template shell = /bin/bash
+
+        client signing =yes
+        client use spnego=yes
+        kerberos method =secrets and keytab
+        password server = *
+
+[homes]
+        comment = Home Directories
+        valid users = %S, %D%w%S
+        browseable = No
+        read only = No
+        inherit acls = Yes
+

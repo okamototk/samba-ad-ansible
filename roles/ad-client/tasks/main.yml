@@ -1,0 +1,72 @@
+- name: Add Samba-AD yum repository
+  yum_repository:
+    name: Samba
+    description: tranquil Samba repository
+    file: SambaTranquil
+    baseurl: https://samba.tranquil.it/centos7/stable/
+    gpgcheck: no
+
+- name: EPEL install
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Install samba client
+  yum: 
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - samba-winbind-clients
+  - krb5-workstation
+  - samba-client
+  - oddjob-mkhomedir
+
+- name: Create krb5.conf
+  template:
+   src: krb5-samba.conf.j2
+   dest: /etc/krb5.conf
+
+
+- name: Create smb.conf
+  template:
+   src: smb.conf.j2
+   dest: /etc/samba/smb.conf
+
+- name: Configure DNS
+  replace:
+    dest=/etc/resolv.conf
+    regexp="^nameserver [0-9.]+"
+    replace="nameserver {{ pdc_ip }}"
+
+- name: Configure nsswitch passwd
+  replace:
+    dest=/etc/nsswitch.conf
+    regexp="^passwd{{':'}} \.+"
+    replace="passwd{{':'}}      files sss winbind"
+
+- name: Configure nsswitch shadow
+  replace:
+    dest=/etc/nsswitch.conf
+    regexp="^shadow{{':'}} \.+"
+    replace="shadow{{':'}}      files sss winbind"
+
+- name: Configure nsswitch group
+  replace:
+    dest=/etc/nsswitch.conf
+    regexp="^group{{':'}} \.+"
+    replace="group{{':'}}      files sss winbind"
+
+
+- name: Add hosts
+  lineinfile: 
+    dest: /etc/hosts
+    line: "{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"
+#  when: test_grep.stdout != ""
+
+- name: Start samba service
+  systemd:
+    name: smb
+    state: restarted
+    enabled: yes
+
+    

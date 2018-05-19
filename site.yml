@@ -1,4 +1,7 @@
 - hosts: samba-pdc
 #  connection: local
   roles:
-  - samba
+  - samba-pdc
+- hosts: ad-client
+  roles:
+  - ad-client

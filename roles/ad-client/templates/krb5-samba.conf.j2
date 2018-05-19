@@ -1,0 +1,14 @@
+[libdefaults]
+        default_realm = {{ realm }}
+        dns_lookup_realm = true
+        dns_lookup_kdc = true
+
+[realms]
+{{ realm }} = {
+  kdc = {{ groups['samba-pdc'][0] }}.{{ realm | lower }}
+  admin_server = {{ groups['samba-pdc'][0] }}.{{ realm | lower }}
+}
+
+[domain_realm]
+  .{{ realm | lower }} = {{ realm }}
+  {{ realm | lower }} = {{ realm }}
