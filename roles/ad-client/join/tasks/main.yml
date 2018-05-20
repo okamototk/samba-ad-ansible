@@ -1,0 +1,20 @@
+- name:
+  yum:
+    name: python2-pip
+    state: latest
+
+- name: Upgrade pip
+  command: pip install --upgrade pip
+
+- name: Install pexpect
+  command: pip install pexpect
+
+- name: Join Domain and PAM config
+  expect:
+    command: "authconfig --enablewinbind --enablewins --enablewinbindauth --smbsecurity ads --smbworkgroup={{ domain }} --smbrealm {{ realm }} --smbservers={{ groups['samba-ad'][0] }}.{{ realm | lower }} --krb5realm={{ realm }} --enablewinbindoffline --enablewinbindkrb5 --winbindtemplateshell=/bin/sh --winbindjoin=administrator --update --enablelocauthorize"
+    responses:
+      (?i)Enter administrator's password: sysadmin0!
+
+- name: Enable auto homedir creation
+  command: authconfig --enablemkhomedir --update
+
