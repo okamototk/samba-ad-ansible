@@ -56,7 +56,11 @@ Execure on client:
     Password for [MYDOMAIN\administrator]:
     Record added successfully
 
+## Remove 
 
+Remove compute from domain. Run pdbedit on dc:
+
+    # pdbedit -x -m CLIENT
 
 ## Trouble Shooting
 
