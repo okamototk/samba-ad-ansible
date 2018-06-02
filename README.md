@@ -86,7 +86,7 @@ Please check client configuration. Check following site:
 
 ### TLS error 
 
-    # ldapsearch -ZZ -x -D "cn=administrator,cn=users,dc=domain,dc=com" -w sysadmin0! -h dc.domain.com -b "cn=users,dc=domain,dc=com" "(objectclass=*)" "sAMAccountName=username"
+    # ldapsearch -ZZ -x -D "cn=administrator,cn=users,dc=mydomain,dc=com" -w sysadmin0! -h dc.mydomain.com -b "cn=users,dc=mydomain,dc=com" "(objectclass=*)" "sAMAccountName=username"
     ldap_start_tls: Connect error (-11)
             additional info: TLS: hostname does not match CN in peer certificate
 
